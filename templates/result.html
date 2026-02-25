@@ -64,6 +64,33 @@
         margin-top: 15px;
     }
 
+    .mail-status {
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    .mail-status.success {
+        background: rgba(25, 135, 84, 0.25);
+        border: 1px solid rgba(25, 135, 84, 0.45);
+    }
+
+    .mail-status.warning {
+        background: rgba(255, 193, 7, 0.18);
+        border: 1px solid rgba(255, 193, 7, 0.45);
+    }
+
+    .mail-status.info {
+        background: rgba(13, 202, 240, 0.2);
+        border: 1px solid rgba(13, 202, 240, 0.45);
+    }
+
+    .mail-status.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
     /* ===== Fade In Animation ===== */
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(20px); }
@@ -115,6 +142,12 @@
 
                 <h4 class="text-success">Food Recommendation</h4>
                 <p>{{ food_rec }}</p>
+
+                {% if mail_status %}
+                <div class="mail-status {{ mail_status.kind }}">
+                    {{ mail_status.text }}
+                </div>
+                {% endif %}
 
                 <hr>
 

@@ -217,6 +217,10 @@ def predict_form():
 
             risk_status = "High Risk" if cls_result == 1 else "Low Risk"
             doctor_rec, food_rec = get_recommendations(risk_status)
+            mail_status = {
+                "kind": "secondary",
+                "text": "Email not attempted."
+            }
 
             save_results_to_csv(
                 patient_name, nurse_name, nurse_email,
@@ -246,8 +250,31 @@ Immediate action required.
                 try:
                     # Never block core prediction flow if SMTP is slow/failing.
                     mail.send(msg)
+                    mail_status = {
+                        "kind": "success",
+                        "text": f"Alert email sent to {nurse_email}."
+                    }
                 except Exception as mail_error:
                     app.logger.exception("Mail send failed: %s", mail_error)
+                    mail_status = {
+                        "kind": "warning",
+                        "text": f"Prediction completed, but email failed to send to {nurse_email}."
+                    }
+            elif cls_result == 1 and not MAIL_ENABLED:
+                mail_status = {
+                    "kind": "warning",
+                    "text": "Prediction completed, but email is not configured on server."
+                }
+            elif cls_result == 1 and not nurse_email:
+                mail_status = {
+                    "kind": "warning",
+                    "text": "Prediction completed, but nurse email is missing."
+                }
+            else:
+                mail_status = {
+                    "kind": "info",
+                    "text": "No email sent because this prediction is Low Risk."
+                }
 
             return render_template(
                 "result.html",
@@ -257,7 +284,8 @@ Immediate action required.
                 doctor_rec=doctor_rec,
                 food_rec=food_rec,
                 risk_chart=risk_chart,
-                symptom_chart=symptom_chart
+                symptom_chart=symptom_chart,
+                mail_status=mail_status
             )
 
         except Exception as e:

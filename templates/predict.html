@@ -2,6 +2,41 @@
 {% block content %}
 
 <style>
+    #loadingOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #loadingOverlay.active {
+        display: flex;
+    }
+
+    .loader-ring {
+        width: 56px;
+        height: 56px;
+        border: 5px solid rgba(255, 255, 255, 0.25);
+        border-top-color: #ffdd59;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+    }
+
+    .loader-text {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
     /* ===== Full-page premium background ===== */
     body {
         background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
@@ -90,7 +125,7 @@
 
                 <h2 class="text-danger mb-4">Stroke Risk Prediction</h2>
 
-                <form method="POST">
+                <form method="POST" id="predictForm">
 
                     <div class="mb-3 text-start">
                         <label class="form-label"><strong>Patient Name</strong></label>
@@ -115,7 +150,7 @@
                     {% endfor %}
 
                     <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-premium btn-lg">
+                        <button type="submit" class="btn btn-premium btn-lg" id="predictBtn">
                             Predict Stroke Risk
                         </button>
                     </div>
@@ -125,5 +160,26 @@
         </div>
     </div>
 </div>
+
+<div id="loadingOverlay" aria-live="polite" aria-busy="true">
+    <div class="loader-ring"></div>
+    <div class="loader-text">Predicting results...</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("predictForm");
+    const overlay = document.getElementById("loadingOverlay");
+    const btn = document.getElementById("predictBtn");
+
+    if (form && overlay && btn) {
+        form.addEventListener("submit", function () {
+            overlay.classList.add("active");
+            btn.disabled = true;
+            btn.textContent = "Predicting...";
+        });
+    }
+});
+</script>
 
 {% endblock %}
