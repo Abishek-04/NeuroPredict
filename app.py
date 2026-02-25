@@ -7,11 +7,14 @@ from wtforms.validators import DataRequired, Length, EqualTo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
 
+import os
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pickle
 import pandas as pd
 import numpy as np
-import os
 
 # ================= APP CONFIG =================
 app = Flask(__name__)
@@ -33,6 +36,7 @@ app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_DEFAULT_SENDER", app.config['MAIL_USERNAME'])
 app.config['MAIL_TIMEOUT'] = int(os.environ.get("MAIL_TIMEOUT", 8))
 MAIL_ENABLED = bool(app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD'])
+ENABLE_CHARTS = os.environ.get("ENABLE_CHARTS", "0") == "1"
 
 mail = Mail(app)
 db = SQLAlchemy(app)
@@ -223,7 +227,13 @@ def predict_form():
                 input_data, risk_status, round(reg_result, 2)
             )
 
-            risk_chart, symptom_chart = generate_charts(input_data, round(reg_result, 2))
+            risk_chart = "static/charts/risk_chart.png"
+            symptom_chart = "static/charts/symptom_chart.png"
+            if ENABLE_CHARTS:
+                try:
+                    risk_chart, symptom_chart = generate_charts(input_data, round(reg_result, 2))
+                except Exception as chart_error:
+                    app.logger.exception("Chart generation failed: %s", chart_error)
 
             # EMAIL ALERT
             if cls_result == 1 and MAIL_ENABLED and nurse_email:
