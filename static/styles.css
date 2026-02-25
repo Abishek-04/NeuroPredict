@@ -1,0 +1,23 @@
+body {
+    background: url("https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2022/12/AI_heart_GettyImages1356164974_Header-1024x575.jpg?w=1155&h=1528") no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+}
+
+.content {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* ===== Full-page premium background ===== */
+    body {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                    url("https://vibrant-wellness.com/hs-fs/hubfs/neurological%20symptoms%20lyme.png?width=1200&height=800&name=neurological%20symptoms%20lyme.png") 
+                    no-repeat center center fixed;
+        background-size: cover;
+        color: #fff;
+    }
+
+    /* ===== Glassmorphism card ===== */
+    .card {
+        background: rgba(255, 255, 255, 0.1); /* translucent */
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 2.5rem;
+        animation: fadeIn 1s ease-in-out;
+        color: #fff;
+    }
+
+    h2, label {
+        text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+    }
+
+    /* ===== Gradient Premium Button ===== */
+    .btn-premium {
+        background: linear-gradient(45deg, #ff6a00, #ee0979);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0.6rem 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .btn-premium:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    /* ===== Form inputs styling ===== */
+    .form-control {
+        border-radius: 10px;
+        padding: 0.6rem;
+        border: 1px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+    }
+
+    .form-control:focus {
+        background: rgba(255,255,255,0.2);
+        box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        color: #fff;
+    }
+
+    /* ===== Fade In Animation ===== */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Responsive adjustments ===== */
+    @media (max-width: 768px) {
+        .card {
+            margin: 2rem 1rem;
+            padding: 2rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+
+                <h2 class="text-danger mb-4">Stroke Risk Prediction</h2>
+
+                <form method="POST">
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label"><strong>Patient Name</strong></label>
+                        <input type="text" name="patient_name" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label"><strong>Home Nurse Name</strong></label>
+                        <input type="text" name="nurse_name" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label"><strong>Nurse Email</strong></label>
+                        <input type="email" name="nurse_email" class="form-control" required>
+                    </div>
+
+                    {% for feature in features %}
+                    <div class="mb-3 text-start">
+                        <label class="form-label"><strong>{{ feature }}</strong></label>
+                        <input type="number" name="{{ feature }}" class="form-control" required>
+                    </div>
+                    {% endfor %}
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-premium btn-lg">
+                            Predict Stroke Risk
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

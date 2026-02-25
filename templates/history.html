@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* ===== Full-page premium background ===== */
+    body {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                    url('https://vibrant-wellness.com/hs-fs/hubfs/neurological%20symptoms%20lyme.png?width=1200&height=800&name=neurological%20symptoms%20lyme.png') 
+                    no-repeat center center fixed;
+        background-size: cover;
+        color: #fff;
+    }
+
+    /* ===== Glassmorphism container ===== */
+    .container {
+        background: rgba(255, 255, 255, 0.1); /* translucent */
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 2.5rem;
+        animation: fadeIn 1s ease-in-out;
+        color: #fff;
+    }
+
+    h2 {
+        text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+    }
+
+    /* ===== Table styling ===== */
+    .table {
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .table th, .table td {
+        vertical-align: middle !important;
+        text-align: center;
+    }
+
+    .table thead {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    /* ===== Gradient button ===== */
+    .btn-premium {
+        background: linear-gradient(45deg, #ff6a00, #ee0979);
+        color: #fff;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0.6rem 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .btn-premium:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    /* ===== Fade In Animation ===== */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+        .container {
+            margin: 2rem 1rem;
+            padding: 2rem 1.5rem;
+        }
+        .table {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center text-danger mb-4">Patient Prediction History</h2>
+
+    {% if records %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Risk Status</th>
+                    <th>Risk %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record["Patient Name"] }}</td>
+                    <td>{{ record["Risk Status"] }}</td>
+                    <td>{{ record["Risk Percentage"] }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-center text-light">No predictions available.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('predict_form') }}" class="btn btn-premium">Back</a>
+    </div>
+</div>
+
+{% endblock %}
