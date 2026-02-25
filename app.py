@@ -31,6 +31,7 @@ app.config['MAIL_USE_TLS'] = os.environ.get("MAIL_USE_TLS", "true").lower() == "
 app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_DEFAULT_SENDER", app.config['MAIL_USERNAME'])
+app.config['MAIL_TIMEOUT'] = int(os.environ.get("MAIL_TIMEOUT", 8))
 MAIL_ENABLED = bool(app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD'])
 
 mail = Mail(app)
@@ -242,7 +243,11 @@ Food: {food_rec}
 Immediate action required.
 """
                 )
-                mail.send(msg)
+                try:
+                    # Never block core prediction flow if SMTP is slow/failing.
+                    mail.send(msg)
+                except Exception as mail_error:
+                    app.logger.exception("Mail send failed: %s", mail_error)
 
             return render_template(
                 "result.html",
