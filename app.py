@@ -25,15 +25,21 @@ app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "change-this-in-producti
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# ================= EMAIL CONFIG =================
-app.config['MAIL_SERVER'] = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
-app.config['MAIL_PORT'] = int(os.environ.get("MAIL_PORT", 587))
-app.config['MAIL_USE_TLS'] = os.environ.get("MAIL_USE_TLS", "true").lower() == "true"
-app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_DEFAULT_SENDER", app.config['MAIL_USERNAME'])
-app.config['MAIL_TIMEOUT'] = int(os.environ.get("MAIL_TIMEOUT", 8))
-MAIL_ENABLED = bool(app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD'])
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'bloghosting34@gmail.com'
+app.config['MAIL_PASSWORD'] = 'fcmipzqwssucvdtv'
+app.config['MAIL_DEFAULT_SENDER'] = 'bloghosting34@gmail.com'
+# # ================= EMAIL CONFIG =================
+# app.config['MAIL_SERVER'] = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+# app.config['MAIL_PORT'] = int(os.environ.get("MAIL_PORT", 587))
+# app.config['MAIL_USE_TLS'] = os.environ.get("MAIL_USE_TLS", "true").lower() == "true"
+# app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
+# app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+# app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_DEFAULT_SENDER", app.config['MAIL_USERNAME'])
+# app.config['MAIL_TIMEOUT'] = int(os.environ.get("MAIL_TIMEOUT", 8))
+# MAIL_ENABLED = bool(app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD'])
 
 mail = Mail(app)
 db = SQLAlchemy(app)
