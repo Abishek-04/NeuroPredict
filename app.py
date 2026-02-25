@@ -70,6 +70,10 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Ensure tables exist when running under Gunicorn/Render (not only __main__).
+with app.app_context():
+    db.create_all()
+
 # ================= FORMS =================
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=4, max=20)])
@@ -303,8 +307,6 @@ def history():
 
 # ================= RUN =================
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     port = int(os.environ.get("PORT", 5000))
     debug = os.environ.get("FLASK_DEBUG", "0") == "1"
     app.run(host="0.0.0.0", port=port, debug=debug)
