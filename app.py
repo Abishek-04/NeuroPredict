@@ -12,6 +12,7 @@ import pickle
 import pandas as pd
 import numpy as np
 import os
+import threading
 
 # ================= APP CONFIG =================
 app = Flask(__name__)
@@ -193,6 +194,30 @@ def generate_charts(input_data, risk_percentage):
     return risk_chart, symptom_chart
 
 
+def send_alert_email_async(patient_name, nurse_name, nurse_email, risk_percentage, doctor_rec, food_rec):
+    with app.app_context():
+        msg = Message(
+            subject="🚨 Stroke Risk Alert",
+            recipients=[nurse_email],
+            body=f"""
+Patient: {patient_name}
+Nurse: {nurse_name}
+
+Status: HIGH STROKE RISK
+Risk: {risk_percentage}%
+
+Doctor: {doctor_rec}
+Food: {food_rec}
+
+Immediate action required.
+"""
+        )
+        try:
+            mail.send(msg)
+        except Exception as mail_error:
+            app.logger.exception("Mail send failed: %s", mail_error)
+
+
 # ================= PREDICTION =================
 @app.route("/predict", methods=["GET", "POST"])
 @login_required
@@ -217,75 +242,32 @@ def predict_form():
 
             risk_status = "High Risk" if cls_result == 1 else "Low Risk"
             doctor_rec, food_rec = get_recommendations(risk_status)
-            mail_status = {
-                "kind": "secondary",
-                "text": "Email not attempted."
-            }
+            risk_percentage = round(reg_result, 2)
 
             save_results_to_csv(
                 patient_name, nurse_name, nurse_email,
-                input_data, risk_status, round(reg_result, 2)
+                input_data, risk_status, risk_percentage
             )
 
-            risk_chart, symptom_chart = generate_charts(input_data, round(reg_result, 2))
+            risk_chart, symptom_chart = generate_charts(input_data, risk_percentage)
 
             # EMAIL ALERT
             if cls_result == 1 and MAIL_ENABLED and nurse_email:
-                msg = Message(
-                    subject="🚨 Stroke Risk Alert",
-                    recipients=[nurse_email],
-                    body=f"""
-Patient: {patient_name}
-Nurse: {nurse_name}
-
-Status: HIGH STROKE RISK
-Risk: {round(reg_result,2)}%
-
-Doctor: {doctor_rec}
-Food: {food_rec}
-
-Immediate action required.
-"""
-                )
-                try:
-                    # Never block core prediction flow if SMTP is slow/failing.
-                    mail.send(msg)
-                    mail_status = {
-                        "kind": "success",
-                        "text": f"Alert email sent to {nurse_email}."
-                    }
-                except Exception as mail_error:
-                    app.logger.exception("Mail send failed: %s", mail_error)
-                    mail_status = {
-                        "kind": "warning",
-                        "text": f"Prediction completed, but email failed to send to {nurse_email}."
-                    }
-            elif cls_result == 1 and not MAIL_ENABLED:
-                mail_status = {
-                    "kind": "warning",
-                    "text": "Prediction completed, but email is not configured on server."
-                }
-            elif cls_result == 1 and not nurse_email:
-                mail_status = {
-                    "kind": "warning",
-                    "text": "Prediction completed, but nurse email is missing."
-                }
-            else:
-                mail_status = {
-                    "kind": "info",
-                    "text": "No email sent because this prediction is Low Risk."
-                }
+                threading.Thread(
+                    target=send_alert_email_async,
+                    args=(patient_name, nurse_name, nurse_email, risk_percentage, doctor_rec, food_rec),
+                    daemon=True
+                ).start()
 
             return render_template(
                 "result.html",
                 patient_name=patient_name,
                 risk_status=risk_status,
-                risk_percentage=round(reg_result, 2),
+                risk_percentage=risk_percentage,
                 doctor_rec=doctor_rec,
                 food_rec=food_rec,
                 risk_chart=risk_chart,
-                symptom_chart=symptom_chart,
-                mail_status=mail_status
+                symptom_chart=symptom_chart
             )
 
         except Exception as e:
