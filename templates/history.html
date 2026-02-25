@@ -74,16 +74,19 @@
     /* ===== Responsive ===== */
     @media (max-width: 768px) {
         .container {
-            margin: 2rem 1rem;
-            padding: 2rem 1.5rem;
+            margin: 1rem auto;
+            padding: 1.25rem 1rem;
         }
         .table {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+        .btn-premium {
+            width: 100%;
         }
     }
 </style>
 
-<div class="container mt-5">
+<div class="container mt-4">
     <h2 class="text-center text-danger mb-4">Patient Prediction History</h2>
 
     {% if records %}

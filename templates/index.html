@@ -139,5 +139,39 @@ body::before {
     50% { background-position:100% 50%; }
     100% { background-position:0% 50%; }
 }
+
+@media (max-width: 768px) {
+    .center-card {
+        padding: 1.5rem !important;
+        border-radius: 20px !important;
+    }
+
+    .center-card h1 {
+        font-size: 2rem !important;
+        line-height: 1.2;
+    }
+
+    .center-card p {
+        font-size: 1rem !important;
+    }
+
+    .image-gallery {
+        gap: 1rem !important;
+    }
+
+    .image-gallery img {
+        width: 100% !important;
+        max-width: 320px;
+        height: auto !important;
+    }
+
+    .btn-getstarted {
+        display: inline-block;
+        width: 100%;
+        max-width: 280px;
+        font-size: 1rem !important;
+        padding: 12px 24px !important;
+    }
+}
 </style>
 {% endblock %}  

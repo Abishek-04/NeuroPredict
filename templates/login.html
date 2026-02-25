@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div style="
-    min-height: 100vh;
+<div class="auth-wrapper" style="
+    min-height: calc(100vh - 2rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,13 +10,14 @@
                 url('https://vibrant-wellness.com/hs-fs/hubfs/neurological%20symptoms%20lyme.png?width=1200&height=800&name=neurological%20symptoms%20lyme.png') no-repeat center center fixed;
     background-size: cover;
 ">
-    <div class="form-container" style="
+    <div class="form-container auth-card" style="
         background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(12px);
         padding: 50px 40px;
         border-radius: 20px;
         box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-        width: 360px;
+        width: 100%;
+        max-width: 360px;
         text-align: center;
         color: #fff;
         animation: fadeIn 1s ease-in-out;
@@ -97,6 +98,22 @@
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px);}
         to { opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 768px) {
+        .auth-wrapper {
+            min-height: auto !important;
+            padding: 1rem 0;
+        }
+
+        .auth-card {
+            padding: 1.5rem 1rem !important;
+            border-radius: 14px !important;
+        }
+
+        .auth-card h2 {
+            font-size: 1.6rem !important;
+        }
     }
 </style>
 
